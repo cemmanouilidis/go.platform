@@ -1,0 +1,4 @@
+#!/bin/bash 
+
+pkg=github.com/cemmanouilidis/go.platform
+docker run --rm -it -v `pwd`/..:/go/src/${pkg} -w /go/src/${pkg}/test golang:1.6 go build -o platform
