@@ -43,3 +43,22 @@ func TestLinuxDistributionUbuntu(t *testing.T) {
 		t.Error("Unexpected id found: ", id)
 	}
 }
+
+func TestLinuxDistributionDummy(t *testing.T) {
+	dist, version, id, err := platform.LinuxDistribution("test_data/linux_dummy/")
+	if err != nil {
+		t.Error("Unexpected error occored: ", err)
+	}
+
+	if dist != "unknown" {
+		t.Error("Unexpected dist found: ", dist)
+	}
+
+	if version != "" {
+		t.Error("Unexpected version found: ", version)
+	}
+
+	if id != "" {
+		t.Error("Unexpected id found: ", id)
+	}
+}
