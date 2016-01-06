@@ -17,6 +17,12 @@ class TestLinuxDistribution(unittest.TestCase):
         )
         self.assertEqual("ubuntu 12.04 precise", output)
 
+    def testDebianJessie(self):
+        _, output = subprocess.getstatusoutput(
+            "docker run --rm -it -v `pwd`:/pkg debian:jessie /pkg/platform"
+        )
+        self.assertEqual("debian 8.2 ", output)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -1,7 +1,9 @@
 package platform
 
 import (
+	"io/ioutil"
 	"path"
+	"strings"
 )
 
 type linuxInfoFunc func(string) (string, string, string, error)
@@ -9,6 +11,11 @@ type linuxInfoFunc func(string) (string, string, string, error)
 var linuxInfoFuncs = map[string]linuxInfoFunc{
 	"arch":   linuxInfoArch,
 	"ubuntu": linuxInfoUbuntu,
+	"debian": linuxInfoDebian,
+}
+
+func linuxInfoArch(etc string) (string, string, string, error) {
+	return "arch", "", "", nil
 }
 
 func linuxInfoUbuntu(etc string) (string, string, string, error) {
@@ -20,8 +27,13 @@ func linuxInfoUbuntu(etc string) (string, string, string, error) {
 	return "ubuntu", lsb.Release, lsb.Codename, nil
 }
 
-func linuxInfoArch(etc string) (string, string, string, error) {
-	return "arch", "", "", nil
+func linuxInfoDebian(etc string) (string, string, string, error) {
+	data, err := ioutil.ReadFile(path.Join(etc, "debian_version"))
+	if err != nil {
+		return "", "", "", err
+	}
+
+	return "debian", strings.TrimSpace(string(data)), "", nil
 }
 
 func LinuxDistribution(args ...string) (string, string, string, error) {

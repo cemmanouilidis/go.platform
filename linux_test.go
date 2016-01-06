@@ -12,6 +12,7 @@ func TestLinuxDistribution(t *testing.T) {
 		//test_data/linux-XX folder, exp. dist, exp. version, exp. id
 		{"arch", "arch", "", ""},
 		{"ubuntu-14.04", "ubuntu", "14.04", "trusty"},
+		{"debian-jessie", "debian", "8.2", ""},
 		{"dummy", "unknown", "", ""},
 	}
 
