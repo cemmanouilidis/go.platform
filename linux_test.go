@@ -1,64 +1,39 @@
 package platform
 
 import (
+	"fmt"
 	"testing"
 
 	platform "."
 )
 
-func TestLinuxDistributionArch(t *testing.T) {
-	dist, version, id, err := platform.LinuxDistribution("test_data/linux_arch")
-	if err != nil {
-		t.Error("Failed to detect LinuxDistribution")
+func TestLinuxDistribution(t *testing.T) {
+	data := [][]string{
+		//test_data/linux-XX folder, exp. dist, exp. version, exp. id
+		{"arch", "arch", "", ""},
+		{"ubuntu-14.04", "ubuntu", "14.04", "trusty"},
+		{"dummy", "unknown", "", ""},
 	}
 
-	if dist != "arch" {
-		t.Error("Unexpected dist found: ", dist)
-	}
+	for _, d := range data {
+		t.Log("Test", d[1])
 
-	if version != "" {
-		t.Error("Unexpected version found: ", version)
-	}
+		path := fmt.Sprintf("test_data/linux_%s", d[0])
+		dist, version, id, err := platform.LinuxDistribution(path)
+		if err != nil {
+			t.Error("Unexpected error occured ", err)
+		}
 
-	if id != "" {
-		t.Error("Unexpected id found: ", id)
-	}
-}
+		if dist != d[1] {
+			t.Error("Unexpected dist found: ", dist)
+		}
 
-func TestLinuxDistributionUbuntu(t *testing.T) {
-	dist, version, id, err := platform.LinuxDistribution("test_data/linux_ubuntu-14.04")
-	if err != nil {
-		t.Error("Failed to detect LinuxDistribution")
-	}
+		if version != d[2] {
+			t.Error("Unexpected version found: ", version)
+		}
 
-	if dist != "ubuntu" {
-		t.Error("Unexpected dist found: ", dist)
-	}
-
-	if version != "14.04" {
-		t.Error("Unexpected version found: ", version)
-	}
-
-	if id != "trusty" {
-		t.Error("Unexpected id found: ", id)
-	}
-}
-
-func TestLinuxDistributionDummy(t *testing.T) {
-	dist, version, id, err := platform.LinuxDistribution("test_data/linux_dummy/")
-	if err != nil {
-		t.Error("Unexpected error occored: ", err)
-	}
-
-	if dist != "unknown" {
-		t.Error("Unexpected dist found: ", dist)
-	}
-
-	if version != "" {
-		t.Error("Unexpected version found: ", version)
-	}
-
-	if id != "" {
-		t.Error("Unexpected id found: ", id)
+		if id != d[3] {
+			t.Error("Unexpected id found: ", id)
+		}
 	}
 }
