@@ -10,6 +10,7 @@ Stay tuned for updates.
 # platform.LinuxDistribution() (dist, version, id, err)
 
 Tries to determine the name, version and id of the Linux OS distribution
+
 Supported dists = Arch, Debian, Ubuntu
 
     import "github.com/cemmanouilidis/go.plaform"
