@@ -2,6 +2,7 @@ package platform
 
 import (
 	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 )
@@ -42,15 +43,12 @@ func LinuxDistribution(args ...string) (string, string, string, error) {
 	if len(args) >= 1 {
 		root = args[0]
 	}
+
 	etc := path.Join(root, "etc")
-	fl, err := dirRead(etc)
+	osReleasePath := path.Join(etc, "os-release")
 
-	if err != nil {
-		return "", "", "", err
-	}
-
-	if fl.ContainsFile("os-release") {
-		orf, err := ReadOsReleaseFile(path.Join(etc, "os-release"))
+	if _, err := os.Stat(osReleasePath); err == nil {
+		orf, err := ReadOsReleaseFile(osReleasePath)
 		if err != nil {
 			return "", "", "", err
 		}
