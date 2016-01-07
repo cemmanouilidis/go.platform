@@ -12,6 +12,7 @@ type linuxInfoFunc func(string) (string, string, string, error)
 
 var linuxInfoFuncs = map[string]linuxInfoFunc{
 	"arch":   linuxInfoArch,
+	"centos": linuxInfoCentos,
 	"debian": linuxInfoDebian,
 	"fedora": linuxInfoFedora,
 	"ubuntu": linuxInfoUbuntu,
@@ -19,6 +20,17 @@ var linuxInfoFuncs = map[string]linuxInfoFunc{
 
 func linuxInfoArch(etc string) (string, string, string, error) {
 	return "arch", "", "", nil
+}
+
+func linuxInfoCentos(etc string) (string, string, string, error) {
+	data, err := ioutil.ReadFile(path.Join(etc, "centos-release"))
+	if err != nil {
+		return "", "", "", err
+	}
+	re, _ := regexp.Compile(`CentOS Linux release (.*) \((.*)\)`)
+	result := re.FindAllStringSubmatch(string(data), -1)
+
+	return "centos", result[0][1], result[0][2], nil
 }
 
 func linuxInfoDebian(etc string) (string, string, string, error) {

@@ -22,7 +22,8 @@ func ReadOsReleaseFile(path string) (*OsReleaseFile, error) {
 	rf := new(OsReleaseFile)
 	for _, line := range strings.Split(string(data), "\n") {
 		if strings.HasPrefix(line, "ID=") {
-			rf.ID = line[len("ID="):]
+			idVal := line[len("ID="):]
+			rf.ID = strings.Trim(idVal, "\"") // remove " if any
 			break
 		}
 	}

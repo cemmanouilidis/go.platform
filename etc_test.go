@@ -1,32 +1,28 @@
 package platform
 
 import (
+	"fmt"
 	"testing"
 )
 
-func TestReadOsReleaseFileArch(t *testing.T) {
-	path := "test_data/linux_arch/etc/os-release"
-	rf, err := ReadOsReleaseFile(path)
-
-	if err != nil {
-		t.Error("Unxepected error: ", err)
+func TestReadOsReleaseFile(t *testing.T) {
+	data := [][]string{
+		{"arch", "arch"},
+		{"ubuntu-14.04", "ubuntu"},
+		{"centos-7", "centos"},
 	}
 
-	if rf.ID != "arch" {
-		t.Error("Unxepected os-release.ID: ", rf.ID)
-	}
-}
+	for _, d := range data {
+		path := fmt.Sprintf("test_data/linux_%s/etc/os-release", d[0])
+		rf, err := ReadOsReleaseFile(path)
 
-func TestReadOsReleaseFileUbuntu(t *testing.T) {
-	path := "test_data/linux_ubuntu-14.04/etc/os-release"
-	rf, err := ReadOsReleaseFile(path)
+		if err != nil {
+			t.Error("Unxepected error: ", err)
+		}
 
-	if err != nil {
-		t.Error("Unxepected error: ", err)
-	}
-
-	if rf.ID != "ubuntu" {
-		t.Error("Unxepected os-release.ID: ", rf.ID)
+		if rf.ID != d[1] {
+			t.Error("Unxepected os-release.ID: ", rf.ID)
+		}
 	}
 }
 
