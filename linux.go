@@ -11,15 +11,10 @@ import (
 type linuxInfoFunc func(*OsReleaseFile) (string, string, string, error)
 
 var linuxInfoFuncs = map[string]linuxInfoFunc{
-	"arch":   linuxInfoArch,
 	"centos": linuxInfoCentos,
 	"debian": linuxInfoDebian,
 	"fedora": linuxInfoFedora,
 	"ubuntu": linuxInfoUbuntu,
-}
-
-func linuxInfoArch(orf *OsReleaseFile) (string, string, string, error) {
-	return "arch", "", "", nil
 }
 
 func linuxInfoCentos(orf *OsReleaseFile) (string, string, string, error) {
@@ -46,6 +41,10 @@ func linuxInfoFedora(orf *OsReleaseFile) (string, string, string, error) {
 	return "fedora", result[0][1], result[0][2], nil
 }
 
+func linuxInfoGeneric(orf *OsReleaseFile) (string, string, string, error) {
+	return orf.ID, orf.VersionId, "", nil
+}
+
 func linuxInfoUbuntu(orf *OsReleaseFile) (string, string, string, error) {
 	etc := path.Dir(orf.path)
 	lsb, err := ReadLsbReleaseFile(path.Join(etc, "lsb-release"))
@@ -60,9 +59,9 @@ func linuxInfoUbuntu(orf *OsReleaseFile) (string, string, string, error) {
 // LinuxDistribution tries to determine linux distribution info
 // Returns distname, version, id, err
 //
-// supported distributions are: Arch, Fedora, Debian, Ubuntu
-// for any other distribution or non-linux system,
-// LinuxDistribution() will return ("uknown", "", "", nil)
+// official supported distributions are: CentOS, Fedora, Debian, Ubuntu
+// for any other distribution LinuxDistribution() will return (os-release.ID, os-release.VERSION_ID, "", nil)
+// on non-linux, LinuxDistribution() will return ("", "", "", nil)
 func LinuxDistribution(args ...string) (string, string, string, error) {
 	root := "/"
 
@@ -81,7 +80,9 @@ func LinuxDistribution(args ...string) (string, string, string, error) {
 		if _, ok := linuxInfoFuncs[orf.ID]; ok {
 			return linuxInfoFuncs[orf.ID](orf)
 		}
+
+		return linuxInfoGeneric(orf)
 	}
 
-	return "unknown", "", "", nil
+	return "", "", "", nil
 }

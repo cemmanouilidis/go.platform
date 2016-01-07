@@ -15,7 +15,8 @@ func TestLinuxDistribution(t *testing.T) {
 		{"debian-jessie", "debian", "8.2", ""},
 		{"fedora-23", "fedora", "23", "Twenty Three"},
 		{"ubuntu-14.04", "ubuntu", "14.04", "trusty"},
-		{"dummy", "unknown", "", ""},
+		{"dummy", "fantasyOS", "42", ""},
+		{"unix", "", "", ""},
 	}
 
 	for _, d := range data {
