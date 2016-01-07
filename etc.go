@@ -1,6 +1,8 @@
 package platform
 
 import (
+	"fmt"
+	"io/ioutil"
 	"strings"
 )
 
@@ -12,9 +14,13 @@ type OsReleaseFile struct {
 // ReadOsReleaseFile reads a /etc/os-release file and
 // returns the data as an OsReleaseFile struct
 func ReadOsReleaseFile(path string) (*OsReleaseFile, error) {
-	rf := new(OsReleaseFile)
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("reading file `%s` failed: %v", path, err)
+	}
 
-	for line := range fileReader(path) {
+	rf := new(OsReleaseFile)
+	for _, line := range strings.Split(string(data), "\n") {
 		if strings.HasPrefix(line, "ID=") {
 			rf.ID = line[len("ID="):]
 			break
@@ -33,9 +39,13 @@ type LsbReleaseFile struct {
 // ReadLsbReleaseFile reads a /etc/lsb-release fie and
 // returns the data as an LsbReleaseFile struct
 func ReadLsbReleaseFile(path string) (*LsbReleaseFile, error) {
-	lsb := new(LsbReleaseFile)
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("reading file `%s` failed: %v", path, err)
+	}
 
-	for line := range fileReader(path) {
+	lsb := new(LsbReleaseFile)
+	for _, line := range strings.Split(string(data), "\n") {
 		if strings.HasPrefix(line, "DISTRIB_RELEASE=") {
 			lsb.Release = line[len("DISTRIB_RELEASE="):]
 		}
