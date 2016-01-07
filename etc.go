@@ -8,7 +8,9 @@ import (
 
 // OsReleaseFile represents some data of a /etc/os-release file
 type OsReleaseFile struct {
-	ID string
+	ID         string
+	VersionId  string
+	PrettyName string
 }
 
 // ReadOsReleaseFile reads a /etc/os-release file and
@@ -22,9 +24,18 @@ func ReadOsReleaseFile(path string) (*OsReleaseFile, error) {
 	rf := new(OsReleaseFile)
 	for _, line := range strings.Split(string(data), "\n") {
 		if strings.HasPrefix(line, "ID=") {
-			idVal := line[len("ID="):]
-			rf.ID = strings.Trim(idVal, "\"") // remove " if any
-			break
+			val := line[len("ID="):]
+			rf.ID = strings.Trim(val, "\"") // remove " if any
+		}
+
+		if strings.HasPrefix(line, "VERSION_ID=") {
+			val := line[len("VERSION_ID="):]
+			rf.VersionId = strings.Trim(val, "\"") // remove " if any
+		}
+
+		if strings.HasPrefix(line, "PRETTY_NAME=") {
+			val := line[len("PRETTY_NAME="):]
+			rf.PrettyName = strings.Trim(val, "\"") // remove " if any
 		}
 	}
 

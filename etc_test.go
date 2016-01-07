@@ -7,9 +7,9 @@ import (
 
 func TestReadOsReleaseFile(t *testing.T) {
 	data := [][]string{
-		{"arch", "arch"},
-		{"ubuntu-14.04", "ubuntu"},
-		{"centos-7", "centos"},
+		{"arch", "arch", "", "Arch Linux"},
+		{"ubuntu-14.04", "ubuntu", "14.04", "Ubuntu 14.04.3 LTS"},
+		{"centos-7", "centos", "7", "CentOS Linux 7 (Core)"},
 	}
 
 	for _, d := range data {
@@ -22,6 +22,14 @@ func TestReadOsReleaseFile(t *testing.T) {
 
 		if rf.ID != d[1] {
 			t.Error("Unxepected os-release.ID: ", rf.ID)
+		}
+
+		if rf.VersionId != d[2] {
+			t.Error("Unxepected os-release.VERSION_ID: ", rf.VersionId)
+		}
+
+		if rf.PrettyName != d[3] {
+			t.Error("Unxepected os-release.PRETTY_NAME: ", rf.PrettyName)
 		}
 	}
 }
