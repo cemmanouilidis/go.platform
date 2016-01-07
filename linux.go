@@ -50,6 +50,12 @@ func linuxInfoUbuntu(etc string) (string, string, string, error) {
 	return "ubuntu", lsb.Release, lsb.Codename, nil
 }
 
+// LinuxDistribution tries to determine linux distribution info
+// Returns distname, version, id, err
+//
+// supported distributions are: Arch, Fedora, Debian, Ubuntu
+// for any other distribution or non-linux system,
+// LinuxDistribution() will return ("uknown", "", "", nil)
 func LinuxDistribution(args ...string) (string, string, string, error) {
 	root := "/"
 
