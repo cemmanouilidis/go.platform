@@ -5,7 +5,7 @@ import (
 )
 
 type OsReleaseFile struct {
-	Id string
+	ID string
 }
 
 func ReadOsReleaseFile(path string) (*OsReleaseFile, error) {
@@ -13,7 +13,7 @@ func ReadOsReleaseFile(path string) (*OsReleaseFile, error) {
 
 	for line := range fileReader(path) {
 		if strings.HasPrefix(line, "ID=") {
-			rf.Id = line[len("ID="):]
+			rf.ID = line[len("ID="):]
 			break
 		}
 	}

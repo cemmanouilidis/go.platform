@@ -12,8 +12,8 @@ func TestReadOsReleaseFileArch(t *testing.T) {
 		t.Error("Unxepected error: ", err)
 	}
 
-	if rf.Id != "arch" {
-		t.Error("Unxepected os-release.Id: ", rf.Id)
+	if rf.ID != "arch" {
+		t.Error("Unxepected os-release.ID: ", rf.ID)
 	}
 }
 
@@ -25,8 +25,8 @@ func TestReadOsReleaseFileUbuntu(t *testing.T) {
 		t.Error("Unxepected error: ", err)
 	}
 
-	if rf.Id != "ubuntu" {
-		t.Error("Unxepected os-release.Id: ", rf.Id)
+	if rf.ID != "ubuntu" {
+		t.Error("Unxepected os-release.ID: ", rf.ID)
 	}
 }
 

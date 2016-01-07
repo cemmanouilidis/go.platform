@@ -66,8 +66,8 @@ func LinuxDistribution(args ...string) (string, string, string, error) {
 			return "", "", "", err
 		}
 
-		if _, ok := linuxInfoFuncs[orf.Id]; ok {
-			return linuxInfoFuncs[orf.Id](etc)
+		if _, ok := linuxInfoFuncs[orf.ID]; ok {
+			return linuxInfoFuncs[orf.ID](etc)
 		}
 	}
 
