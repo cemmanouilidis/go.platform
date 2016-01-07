@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type linuxInfoFunc func(string) (string, string, string, error)
+type linuxInfoFunc func(*OsReleaseFile) (string, string, string, error)
 
 var linuxInfoFuncs = map[string]linuxInfoFunc{
 	"arch":   linuxInfoArch,
@@ -18,22 +18,19 @@ var linuxInfoFuncs = map[string]linuxInfoFunc{
 	"ubuntu": linuxInfoUbuntu,
 }
 
-func linuxInfoArch(etc string) (string, string, string, error) {
+func linuxInfoArch(orf *OsReleaseFile) (string, string, string, error) {
 	return "arch", "", "", nil
 }
 
-func linuxInfoCentos(etc string) (string, string, string, error) {
-	data, err := ioutil.ReadFile(path.Join(etc, "centos-release"))
-	if err != nil {
-		return "", "", "", err
-	}
-	re, _ := regexp.Compile(`CentOS Linux release (.*) \((.*)\)`)
-	result := re.FindAllStringSubmatch(string(data), -1)
+func linuxInfoCentos(orf *OsReleaseFile) (string, string, string, error) {
+	re, _ := regexp.Compile(`CentOS Linux (.*) \((.*)\)`)
+	result := re.FindAllStringSubmatch(orf.PrettyName, -1)
 
-	return "centos", result[0][1], result[0][2], nil
+	return orf.ID, result[0][1], result[0][2], nil
 }
 
-func linuxInfoDebian(etc string) (string, string, string, error) {
+func linuxInfoDebian(orf *OsReleaseFile) (string, string, string, error) {
+	etc := path.Dir(orf.path)
 	data, err := ioutil.ReadFile(path.Join(etc, "debian_version"))
 	if err != nil {
 		return "", "", "", err
@@ -42,19 +39,17 @@ func linuxInfoDebian(etc string) (string, string, string, error) {
 	return "debian", strings.TrimSpace(string(data)), "", nil
 }
 
-func linuxInfoFedora(etc string) (string, string, string, error) {
-	data, err := ioutil.ReadFile(path.Join(etc, "fedora-release"))
-	if err != nil {
-		return "", "", "", err
-	}
-	re, _ := regexp.Compile(`Fedora release (.*) \((.*)\)`)
-	result := re.FindAllStringSubmatch(string(data), -1)
+func linuxInfoFedora(orf *OsReleaseFile) (string, string, string, error) {
+	re, _ := regexp.Compile(`Fedora (.*) \((.*)\)`)
+	result := re.FindAllStringSubmatch(orf.PrettyName, -1)
 
 	return "fedora", result[0][1], result[0][2], nil
 }
 
-func linuxInfoUbuntu(etc string) (string, string, string, error) {
+func linuxInfoUbuntu(orf *OsReleaseFile) (string, string, string, error) {
+	etc := path.Dir(orf.path)
 	lsb, err := ReadLsbReleaseFile(path.Join(etc, "lsb-release"))
+
 	if err != nil {
 		return "", "", "", err
 	}
@@ -75,8 +70,7 @@ func LinuxDistribution(args ...string) (string, string, string, error) {
 		root = args[0]
 	}
 
-	etc := path.Join(root, "etc")
-	osReleasePath := path.Join(etc, "os-release")
+	osReleasePath := path.Join(root, "etc", "os-release")
 
 	if _, err := os.Stat(osReleasePath); err == nil {
 		orf, err := ReadOsReleaseFile(osReleasePath)
@@ -85,7 +79,7 @@ func LinuxDistribution(args ...string) (string, string, string, error) {
 		}
 
 		if _, ok := linuxInfoFuncs[orf.ID]; ok {
-			return linuxInfoFuncs[orf.ID](etc)
+			return linuxInfoFuncs[orf.ID](orf)
 		}
 	}
 

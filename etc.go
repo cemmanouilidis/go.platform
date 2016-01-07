@@ -8,6 +8,7 @@ import (
 
 // OsReleaseFile represents some data of a /etc/os-release file
 type OsReleaseFile struct {
+	path       string
 	ID         string
 	VersionId  string
 	PrettyName string
@@ -22,6 +23,8 @@ func ReadOsReleaseFile(path string) (*OsReleaseFile, error) {
 	}
 
 	rf := new(OsReleaseFile)
+	rf.path = path
+
 	for _, line := range strings.Split(string(data), "\n") {
 		if strings.HasPrefix(line, "ID=") {
 			val := line[len("ID="):]

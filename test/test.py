@@ -33,7 +33,7 @@ class TestLinuxDistribution(unittest.TestCase):
         _, output = subprocess.getstatusoutput(
             "docker run --rm -it -v `pwd`:/pkg centos:7.2.1511 /pkg/platform"
         )
-        self.assertEqual("centos 7.2.1511 Core", output)
+        self.assertEqual("centos 7 Core", output)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

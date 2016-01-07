@@ -11,7 +11,7 @@ func TestLinuxDistribution(t *testing.T) {
 	data := [][]string{
 		//test_data/linux-XX folder, exp. dist, exp. version, exp. id
 		{"arch", "arch", "", ""},
-		{"centos-7", "centos", "7.2.1511", "Core"},
+		{"centos-7", "centos", "7", "Core"},
 		{"debian-jessie", "debian", "8.2", ""},
 		{"fedora-23", "fedora", "23", "Twenty Three"},
 		{"ubuntu-14.04", "ubuntu", "14.04", "trusty"},
