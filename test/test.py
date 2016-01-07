@@ -23,6 +23,11 @@ class TestLinuxDistribution(unittest.TestCase):
         )
         self.assertEqual("debian 8.2 ", output)
 
+    def testFedora20(self):
+        _, output = subprocess.getstatusoutput(
+            "docker run --rm -it -v `pwd`:/pkg fedora:20 /pkg/platform"
+        )
+        self.assertEqual("fedora 20 Heisenbug", output)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
